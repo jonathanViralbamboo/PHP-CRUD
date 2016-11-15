@@ -3,7 +3,6 @@ require 'inc/functions.php';
 
 $page = "reports";
 $pageTitle = "Reports | Time Tracker";
-$filter = 'all';
 
 include 'inc/header.php';
 ?>
@@ -16,33 +15,14 @@ include 'inc/header.php';
             <div class="wrapper">
                 <table>
                     <?php
-                    $total = $project_id = $project_total = 0;
-                    $tasks = get_task_list($filter);
-                    foreach ($tasks as $item) {
-                      if ($project_id != $item['project_id']) {
-                        $project_id = $item['project_id'];
-                        echo "<thead>\n";
+                    $total = 0;
+                    foreach (get_task_list() as $item) {
+                        $total += $item['time'];
                         echo "<tr>\n";
-                        echo "<th>" . $item['project'] . "</th>\n";
-                        echo "<th>" . $item['date'] . "</th>\n";
-                        echo "<th>" . $item['time'] . "</th>\n";
+                        echo "<td>". $item['title'] . "</td>\n";
+                        echo "<td>". $item['date'] . "</td>\n";
+                        echo "<td>". $item['time'] . "</td>\n";
                         echo "</tr>\n";
-                        echo "</thead>\n";
-                      }
-                      $project_total += $item['time'];
-                      $total += $item['time'];
-                      echo "<tr>\n";
-                      echo "<td>". $item['title'] . "</td>\n";
-                      echo "<td>". $item['date'] . "</td>\n";
-                      echo "<td>". $item['time'] . "</td>\n";
-                      echo "</tr>\n";
-                      if (next($tasks)['project_id'] != $item['project_id']) {
-                        echo "<tr>\n";
-                        echo "<th class='project-total-label' colspan='2'>Project Total</th>\n";
-                        echo "<th class='project-total-number'>$project_total</th>\n";
-                        echo "</tr>\n";
-                        $project_total = 0;
-                      }
                     }
                     ?>
                     <tr>
@@ -56,3 +36,4 @@ include 'inc/header.php';
 </div>
 
 <?php include "inc/footer.php"; ?>
+
